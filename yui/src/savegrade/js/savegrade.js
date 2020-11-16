@@ -1,15 +1,13 @@
-YUI.add('moodle-mod_scheduler-saveseen', function (Y, NAME) {
-
 // ESLint directives.
 /* eslint-disable camelcase */
 
 var SELECTORS = {
-    CHECKBOXES: 'table#slotmanager form.studentselectform input.studentselect, table#dates form.studentselectform input.studentselect'
-},
+        SELECTS: 'table#dates form.studentselectform select.studentselect'
+    },
     MOD;
 
 M.mod_scheduler = M.mod_scheduler || {};
-MOD = M.mod_scheduler.saveseen = {};
+MOD = M.mod_scheduler.savegrade = {};
 
 /**
  * Save the "seen" status.
@@ -19,15 +17,15 @@ MOD = M.mod_scheduler.saveseen = {};
  * @param {Boolean} newseen
  * @param {Object} spinner The spinner icon shown while saving
  */
-MOD.save_status = function(cmid, appid, newseen, spinner) {
+MOD.save_status = function(cmid, appid, newgrade, spinner) {
 
     Y.io(M.cfg.wwwroot + '/mod/scheduler/ajax.php', {
         // The request paramaters.
         data: {
-            action: 'saveseen',
+            action: 'savegrade',
             id: cmid,
             appointmentid: appid,
-            seen: newseen,
+            grade: newgrade,
             sesskey: M.cfg.sesskey
         },
 
@@ -57,13 +55,10 @@ MOD.save_status = function(cmid, appid, newseen, spinner) {
 };
 
 MOD.init = function(cmid) {
-    Y.all(SELECTORS.CHECKBOXES).each(function(box) {
+    Y.all(SELECTORS.SELECTS).each(function(box) {
         box.on('change', function() {
             var spinner = M.util.add_spinner(Y, box.ancestor('div'));
-            M.mod_scheduler.saveseen.save_status(cmid, box.get('value'), box.get('checked'), spinner);
+            M.mod_scheduler.savegrade.save_status(cmid, box.getData('appid'), box.get('value'), spinner);
         });
     });
 };
-
-
-}, '@VERSION@', {"requires": ["base", "node", "event"]});

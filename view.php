@@ -68,7 +68,7 @@ $subpage = optional_param('subpage', $defaultsubpage, PARAM_ALPHA);
 $title = $course->shortname . ': ' . format_string($scheduler->name);
 $PAGE->set_title($title);
 $PAGE->set_heading($course->fullname);
-
+$output = $PAGE->get_renderer('mod_scheduler');
 // Route to screen.
 
 $teachercaps = ['mod/scheduler:manage', 'mod/scheduler:manageallappointments', 'mod/scheduler:canseeotherteachersbooking'];
@@ -83,7 +83,9 @@ if ($isteacher) {
     } else if ($action == 'export') {
         include($CFG->dirroot.'/mod/scheduler/export.php');
     } else if ($action == 'datelist') {
-        include($CFG->dirroot.'/mod/scheduler/datelist.php');
+        include($CFG->dirroot . '/mod/scheduler/datelist.php');
+    } else if ($action == 'grade') {
+        include($CFG->dirroot . '/mod/scheduler/grade.php');
     } else {
         include($CFG->dirroot.'/mod/scheduler/teacherview.php');
     }
@@ -94,7 +96,7 @@ if ($isteacher) {
 
 } else {
     // For guests.
-    echo $OUTPUT->header();
-    echo $OUTPUT->box(get_string('guestscantdoanything', 'scheduler'), 'generalbox');
-    echo $OUTPUT->footer($course);
+    echo $output->header();
+    echo $output->box(get_string('guestscantdoanything', 'scheduler'), 'generalbox');
+    echo $output->footer($course);
 }

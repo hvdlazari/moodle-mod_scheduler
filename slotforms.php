@@ -243,7 +243,6 @@ class scheduler_editslot_form extends scheduler_slotform_base {
         $mform->setType('notes', PARAM_RAW); // Must be PARAM_RAW for rich text editor content.
 
         // Appointments.
-
         $repeatarray = array();
         $grouparray = array();
         $repeatarray[] = $mform->createElement('header', 'appointhead', get_string('appointmentno', 'scheduler', '{no}'));
@@ -285,6 +284,7 @@ class scheduler_editslot_form extends scheduler_slotform_base {
 
         // Tickbox to remove the student.
         $repeatarray[] = $mform->createElement('advcheckbox', 'deletestudent', '', get_string('deleteonsave', 'scheduler'));
+        $repeatarray[] = $mform->createElement('advcheckbox', 'notifystudent', '', get_string('notifyonsave', 'scheduler'));
 
         if (isset($this->_customdata['repeats'])) {
             $repeatno = $this->_customdata['repeats'];
@@ -304,6 +304,7 @@ class scheduler_editslot_form extends scheduler_slotform_base {
         $repeateloptions['teachernote_editor']['disabledif'] = $nostudcheck;
         $repeateloptions['grade']['disabledif'] = $nostudcheck;
         $repeateloptions['deletestudent']['disabledif'] = $nostudcheck;
+        $repeateloptions['notifystudent']['disabledif'] = $nostudcheck;
         $repeateloptions['appointhead']['expanded'] = true;
 
         $this->repeat_elements($repeatarray, $repeatno, $repeateloptions,
@@ -435,6 +436,7 @@ class scheduler_editslot_form extends scheduler_slotform_base {
      * @return slot the updated slot
      */
     public function save_slot($slotid, $data) {
+        $notifystudent = false;
 
         $context = $this->scheduler->get_context();
 
@@ -463,6 +465,7 @@ class scheduler_editslot_form extends scheduler_slotform_base {
                 $this->noteoptions, $editor['text']);
         $slot->notesformat = $editor['format'];
 
+        $recipients = [];
         $currentapps = $slot->get_appointments();
         for ($i = 0; $i < $data->appointment_repeats; $i++) {
             if ($data->deletestudent[$i] != 0) {
@@ -500,12 +503,35 @@ class scheduler_editslot_form extends scheduler_slotform_base {
                             $this->noteoptions, $editor['text']);
                     $app->teachernoteformat = $editor['format'];
                 }
+
+                if ($data->notifystudent[$i] != 0) {
+                    $notifystudent = true;
+                    $recipients[$i] = $data->studentid[$i];
+                }
             }
         }
 
         $slot->save();
 
         $slot = $this->scheduler->get_slot($slot->id);
+
+        if ($notifystudent) {
+            if (!empty($recipients)) {
+                $recipientids = implode(',', $recipients);
+                $actionurl = new moodle_url('/mod/scheduler/view.php',
+                    array(
+                        'what' => 'sendmessage',
+                        'id' => $this->scheduler->cmid,
+                        'slotid' => $slotid,
+                        'sesskey' => sesskey(),
+                        'subpage' => 'allappointments',
+                        'template' => 'updateslot',
+                        'recipients' => $recipientids
+                    )
+                );
+                redirect($actionurl);
+            }
+        }
 
         return $slot;
     }

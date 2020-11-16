@@ -25,6 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 use \mod_scheduler\model\scheduler;
+use \mod_scheduler\model\slot;
 
 /**
  * Print a selection box of existing slots to be scheduler in
@@ -135,7 +136,7 @@ $baseurl = new moodle_url('/mod/scheduler/view.php', array(
 $viewurl = new moodle_url($baseurl, array('what' => 'view'));
 
 $PAGE->set_url($viewurl);
-
+$output = $PAGE->get_renderer('mod_scheduler');
 if ($action != 'view') {
     require_once($CFG->dirroot.'/mod/scheduler/slotforms.php');
     require_once($CFG->dirroot.'/mod/scheduler/teacherview.controller.php');
@@ -351,15 +352,21 @@ if ($action == 'sendmessage') {
     require_once($CFG->dirroot.'/mod/scheduler/message_form.php');
 
     $template = optional_param('template', 'none', PARAM_ALPHA);
+    $slotid = optional_param('slotid', 0, PARAM_INT);
     $recipientids = required_param('recipients', PARAM_SEQUENCE);
 
     $actionurl = new moodle_url('/mod/scheduler/view.php',
             array('what' => 'sendmessage', 'id' => $cm->id, 'subpage' => $subpage,
                   'template' => $template, 'recipients' => $recipientids));
 
+    $slot = null;
+    if ($slotid) {
+        $slot = slot::load_by_id($slotid, $scheduler);
+    }
+
     $templatedata = array();
     if ($template != 'none') {
-        $vars = scheduler_messenger::get_scheduler_variables($scheduler, null, $USER, null, $COURSE, null);
+        $vars = scheduler_messenger::get_scheduler_variables($scheduler, $slot, $USER, null, $COURSE, null);
         $templatedata['subject'] = scheduler_messenger::compile_mail_template($template, 'subject', $vars);
         $templatedata['body'] = scheduler_messenger::compile_mail_template($template, 'html', $vars);
     }
@@ -379,7 +386,6 @@ if ($action == 'sendmessage') {
         die;
     }
 }
-
 
 /****************** Standard view ***********************************************/
 
@@ -535,7 +541,7 @@ if ($slots) {
     echo html_writer::div(get_string('markseen', 'scheduler'));
 
 }
-
+########################################Shedules pendenting students####################################################
 $groupfilter = ($subpage == 'myappointments') ? $groupsthatcanseeme : $groupsicurrentlysee;
 $maxlistsize = get_config('mod_scheduler', 'maxstudentlistsize');
 $students = array();

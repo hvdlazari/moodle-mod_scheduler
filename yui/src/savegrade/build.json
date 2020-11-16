@@ -1,0 +1,10 @@
+{
+  "name": "moodle-mod_scheduler-savegrade",
+  "builds": {
+    "moodle-mod_scheduler-savegrade": {
+      "jsfiles": [
+        "savegrade.js"
+      ]
+    }
+  }
+}

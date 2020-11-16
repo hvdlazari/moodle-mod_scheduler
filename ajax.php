@@ -57,6 +57,18 @@ switch ($action) {
         $slot->save();
 
         break;
+    case 'savegrade':
+
+        $appid = required_param('appointmentid', PARAM_INT);
+        list($slot, $app) = $scheduler->get_slot_appointment($appid);
+        $newgrade = required_param('grade', PARAM_INT);
+
+        $permissions->ensure($permissions->can_edit_attended($app));
+
+        $app->grade = $newgrade;
+        $slot->save();
+
+        break;
 }
 
 echo json_encode($return);

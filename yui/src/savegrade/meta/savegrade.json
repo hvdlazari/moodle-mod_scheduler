@@ -1,0 +1,7 @@
+{
+  "moodle-mod_scheduler-savegrade": {
+    "requires": [
+      "base", "node", "event"
+    ]
+  }
+}

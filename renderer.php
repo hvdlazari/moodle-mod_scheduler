@@ -385,6 +385,7 @@ class mod_scheduler_renderer extends plugin_renderer_base {
         $level1[] = $this->teacherview_tab($baseurl, 'datelist', 'datelist');
         $level1[] = $statstab;
         $level1[] = $this->teacherview_tab($baseurl, 'export', 'export');
+        $level1[] = $this->teacherview_tab($baseurl, 'grade', 'grade');
 
         return $this->tabtree($level1, $selected, $inactive);
     }
@@ -836,6 +837,18 @@ class mod_scheduler_renderer extends plugin_renderer_base {
                 $url = new moodle_url($slotman->actionurl, array('what' => 'revokeall', 'slotid' => $slot->slotid));
                 $confirmrevoke = new confirm_action(get_string('confirmrevoke', 'scheduler'));
                 $actions .= $this->action_icon($url, new pix_icon('s/no', get_string('revoke', 'scheduler')), $confirmrevoke);
+            }
+
+            if ($slot->editable) {
+                $recipientids = [];
+                foreach ($slot->students->students as $student) {
+                    $recipientids[] = $student->user->id;
+                }
+
+                $recipientids = implode(',', $recipientids);
+                $actionurl = new moodle_url($slotman->actionurl,
+                    array('what' => 'sendmessage', 'id' => $slotman->scheduler->cmid, 'subpage' => 'allappointments', 'recipients' => $recipientids));
+                $actions .= $this->action_icon($actionurl, new pix_icon('t/email', get_string('sendmessage', 'scheduler')));
             }
 
             if ($slot->exclusivity > 1) {

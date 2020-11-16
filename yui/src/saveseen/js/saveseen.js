@@ -2,7 +2,7 @@
 /* eslint-disable camelcase */
 
 var SELECTORS = {
-    CHECKBOXES: 'table#slotmanager form.studentselectform input.studentselect'
+    CHECKBOXES: 'table#slotmanager form.studentselectform input.studentselect, table#dates form.studentselectform input.studentselect'
 },
     MOD;
 

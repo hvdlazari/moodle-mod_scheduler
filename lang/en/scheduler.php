@@ -635,3 +635,11 @@ $string['email_invite_html'] = '<p>Please choose a time slot for an appointment 
 
 $string['email_invitereminder_subject'] = 'Reminder: {$a->module}';
 $string['email_invitereminder_html'] = '<p>This is just a reminder that you have not yet set up your appointment. Please choose a time slot as soon as possible at:</p><p>{$a->scheduler_url}</p>';
+
+$string['notifyonsave'] = 'Notify participant?';
+
+$string['email_updateslot_subject'] = 'Reminder: {$a->module}';
+$string['email_updateslot_html'] = '<p>You have an upcoming appointment on <strong>{$a->date}</strong>
+from <strong>{$a->time}</strong> to <strong>{$a->endtime}</strong><br/>
+with <strong><a href="{$a->scheduler_url}">{$a->staffrole}</a></strong>.</p>
+';

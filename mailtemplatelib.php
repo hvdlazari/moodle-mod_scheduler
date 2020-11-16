@@ -179,7 +179,7 @@ class scheduler_messenger {
         if ($slot) {
             $vars ['DATE']     = userdate($slot->starttime, get_string('strftimedate'), $tz);
             $vars ['TIME']     = userdate($slot->starttime, get_string('strftimetime'), $tz);
-            $vars ['ENDTIME']  = userdate($slot->endtime, get_string('strftimetime'), $tz);
+            $vars ['ENDTIME']  = userdate($slot->get_endtime(), get_string('strftimetime'), $tz);
             $vars ['LOCATION'] = format_string($slot->appointmentlocation);
         }
         if ($teacher) {

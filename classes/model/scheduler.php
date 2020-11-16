@@ -902,6 +902,18 @@ class scheduler extends mvc_record_model {
         return $this->fetch_slots($where, '', $params, $limitfrom, $limitnum, 's.starttime ASC, s.duration ASC, s.teacherid');
     }
 
+    /**
+     * Get
+     *
+     * @param $wherecond
+     * @param $havingcond
+     * @param array $params
+     * @return slot[]
+     */
+    public function get_slots_by_scheduler($wherecond = null, $havingcond = null, $params = []) {
+        return $this->fetch_slots($wherecond, $havingcond, $params);
+    }
+
 
     /* ************** End of slot retrieveal routines ******************** */
 

@@ -638,8 +638,8 @@ $string['email_invitereminder_html'] = '<p>This is just a reminder that you have
 
 $string['notifyonsave'] = 'Notify participant?';
 
-$string['email_updateslot_subject'] = 'Reminder: {$a->module}';
-$string['email_updateslot_html'] = '<p>You have an upcoming appointment on <strong>{$a->date}</strong>
+$string['email_notifyslot_subject'] = 'Notify: {$a->module}';
+$string['email_notifyslot_html'] = '<p>You have an upcoming appointment on <strong>{$a->date}</strong>
 from <strong>{$a->time}</strong> to <strong>{$a->endtime}</strong><br/>
 with <strong><a href="{$a->scheduler_url}">{$a->staffrole}</a></strong>.</p>
 ';

@@ -522,10 +522,10 @@ class scheduler_editslot_form extends scheduler_slotform_base {
                     array(
                         'what' => 'sendmessage',
                         'id' => $this->scheduler->cmid,
-                        'slotid' => $slotid,
+                        'slotid' => $slot->id,
                         'sesskey' => sesskey(),
                         'subpage' => 'allappointments',
-                        'template' => 'updateslot',
+                        'template' => 'notifyslot',
                         'recipients' => $recipientids
                     )
                 );
